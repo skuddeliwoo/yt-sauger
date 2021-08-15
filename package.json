@@ -1,0 +1,25 @@
+{
+  "name": "yt-sauger",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dl.js",
+  "scripts": {
+    "start": "node ./src/app/index.js",
+    "watch": "nodemon --watch src src/app/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/skuddeliwoo/yt-sauger.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/skuddeliwoo/yt-sauger/issues"
+  },
+  "homepage": "https://github.com/skuddeliwoo/yt-sauger#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "node-fetch": "^2.6.1"
+  }
+}
