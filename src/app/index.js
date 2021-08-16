@@ -14,18 +14,15 @@ app.get('/', (req, res) => {
 	res.sendFile(__dirname + '/public/index.html')
 })
 
-app.get('/convert/:links', (req, res) => {
+app.get('/convert/link/:link', async (req, res) => {
 
-	console.log('i should convert links', req.params.links);
+	console.log('i should stream a link', req.params.link);
 
-	const links = atob(decodeURI(req.params.links)).split(',')
+	const link = atob(decodeURI(req.params.link))
 
-	console.log(links);
+	console.log(link);
 
-	dl(links)
-
-
-	res.sendFile(__dirname + '/public/convert.html')
+	await dl(link, res)
 })
 
 app.listen(port, () => {

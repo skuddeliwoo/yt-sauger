@@ -1,49 +1,48 @@
 const ytdl = require('ytdl-core');
 const ffmpeg = require('fluent-ffmpeg');
 
-const downloadAndConvertVideoToMp3 = ({
+const downloadAndConvertVideoToMp3 = async ({
   title,
   videoUrl,
   startTime,
   duration,
-  filePath,
-}) =>
-  new Promise((resolve, reject) =>
-    ffmpeg(ytdl(videoUrl, {filter: 'audioonly', quality: 'highestaudio'}))
+  resStream,
+}) => new Promise((resolve, reject) => ffmpeg(ytdl(videoUrl, {filter: 'audioonly', quality: 'highestaudio'}))
         .toFormat('mp3')
         .withAudioBitrate(320)
         .setStartTime(startTime)
         .duration(duration)
         .on('error', (err) => reject(err))
-        .on('end', () => resolve(`${filePath}/${title}.mp3`))
-        .saveToFile(`${filePath}/${title}.mp3`));
+        .on('end', () => resolve(`${title}.mp3`))
+        .writeToStream(resStream, {end: true})
+      )
 
-
-const mergeParams = (videoInfo, params, filePath) => ({
+const mergeParams = (videoInfo, params, resStream) => ({
   title: params.title ?? videoInfo.videoDetails.title,
   videoUrl: videoInfo.videoDetails.video_url,
   startTime: params.startTime ?? '00:00:00',
   duration: params.duration ?? videoInfo.videoDetails.lengthSeconds,
-  filePath: filePath ?? __dirname,
+  resStream: resStream
 });
 
-// creates Download function
-const youtubeMp3Converter = (filePath) => (youtubeUrl, params={}) =>
+
+const youtubeMp3Converter = (resStream) => (youtubeUrl, params={}) =>
   ytdl
       .getInfo(youtubeUrl)
-      .then((info) => mergeParams(info, params, filePath))
+      .then((info) => mergeParams(info, params, resStream))
+      .then((info) => {
+        resStream.setHeader(
+          "Content-Disposition", `attachment; filename=${info.title}.mp3`
+        );
+        return info;
+      })
       .then(downloadAndConvertVideoToMp3);
 
 
-// Downloads mp3 and Returns path were it was saved.
-const convertLinkToMp3 = youtubeMp3Converter(__dirname + '/downloads')
-
-
-async function dl(links){
+async function dl(link, resStream){
+  const convertLinkToMp3 = youtubeMp3Converter(resStream)
   console.log('tryna to dl');
-  links.map(async (link) => {
-    const pathToMp3 = await convertLinkToMp3(link)
-  })
+  return convertLinkToMp3(link)
 }
 
 module.exports = dl
