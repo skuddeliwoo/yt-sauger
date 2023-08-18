@@ -1,11 +1,11 @@
 if (document.readyState == 'loading') {
-	document.onreadystatechange = function () {
-		if (document.readyState == 'interactive') {
-			app();
-		}
-	}
+  document.onreadystatechange = function () {
+    if (document.readyState == 'interactive') {
+      app();
+    }
+  }
 } else {
-	app();
+  app();
 }
 
 class LinkBuffer {
@@ -48,11 +48,11 @@ function app() {
 
   compileButton.onclick = async () => {
     const links = linksTextarea.value.split('\n')
-    .map(el => el.trim())
-    .filter(el => el != '')
+      .map(el => el.trim())
+      .filter(el => el != '')
 
     if (links && links.length > 0) {
-			buffer.addLinks(links)
+      buffer.addLinks(links)
     }
 
     linksTextarea.value = ''
@@ -61,7 +61,7 @@ function app() {
   convertButton.onclick = async () => {
     const link = buffer.consumeLink()
 
-    if(link && link.length) {
+    if (link && link.length) {
       window.open(`./convert/link/${encodeURIComponent(btoa(link))}`, '_blank')
     }
   }
