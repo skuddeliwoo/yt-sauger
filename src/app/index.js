@@ -1,8 +1,8 @@
-import express from "express";
-import path from "path"
-import cors from "cors"
-import atob from "atob"
-import {dl} from './dl'
+const express = require('express')
+const path = require('path')
+const cors = require('cors')
+const atob = require('atob')
+const dl = require('./dl.js')
 
 const app = express();
 const port = 3001;
@@ -10,7 +10,7 @@ const port = 3001;
 app.use(express.static(path.resolve(__dirname, 'public')))
 app.use(cors({ origin: true, credentials: true }))
 
-app.get('/', (_, res) => {
+app.get('/', (req, res) => {
 	res.sendFile(__dirname + '/public/index.html')
 })
 
@@ -20,7 +20,7 @@ app.get('/convert/link/:link', async (req, res) => {
 
 	const link = atob(decodeURI(req.params.link))
 
-	console.log('link', link);
+	console.log(link);
 
 	await dl(link, res)
 })
