@@ -32,7 +32,7 @@ const youtubeMp3Converter = (resStream) => (youtubeUrl, params = {}) =>
     .then((info) => mergeParams(info, params, resStream))
     .then((info) => {
       resStream.setHeader(
-        "Content-Disposition", `attachment; filename=${info.title}.mp3`
+        "Content-Disposition", `attachment; filename=${encodeURI(info.title)}.mp3`
       );
       return info;
     })
