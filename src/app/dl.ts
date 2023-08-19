@@ -1,5 +1,5 @@
-const ytdl = require('ytdl-core');
-const ffmpeg = require('fluent-ffmpeg');
+import ytdl from 'ytdl-core'
+import ffmpeg from 'fluent-ffmpeg'
 
 const downloadAndConvertVideoToMp3 = async ({
   title,
@@ -31,18 +31,19 @@ const youtubeMp3Converter = (resStream) => (youtubeUrl, params = {}) =>
     .getInfo(youtubeUrl)
     .then((info) => mergeParams(info, params, resStream))
     .then((info) => {
+      console.log(info.title);
+      
       resStream.setHeader(
-        "Content-Disposition", `attachment; filename=${info.title}.mp3`
+        "Content-Disposition", `attachment; filename=${encodeURI(info.title)}.mp3`
       );
       return info;
     })
     .then(downloadAndConvertVideoToMp3);
 
 
-async function dl(link, resStream) {
+export async function dl(link, resStream) {
   const convertLinkToMp3 = youtubeMp3Converter(resStream)
   console.log('tryna to dl');
   return convertLinkToMp3(link)
 }
 
-module.exports = dl

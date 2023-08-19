@@ -43,7 +43,6 @@ function app() {
   const linksTextarea = document.querySelector('#linksTextarea');
   const linkList = document.querySelector('#linkList');
 
-
   const buffer = new LinkBuffer(linkList)
 
   compileButton.onclick = async () => {
